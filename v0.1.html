@@ -526,10 +526,10 @@ Tokens   →  consumo de contexto por sesión</pre>
 <h3 style="margin-top: 28px; font-size: 10pt; color: var(--mid); letter-spacing: 0.05em;">Trabajo en desarrollo — Handoff</h3>
 
 <div class="references">
-  <div class="ref-item"><strong>AI App Blueprint</strong> — implementación de referencia para el caso individual, base desde la que se extiende la propuesta distribuida. github.com/handoffcl/ai-app-blueprint</div>
-  <div class="ref-item"><strong>Handoff Blueprint</strong> — github.com/handoffcl/handoff-blueprint</div>
-  <div class="ref-item"><strong>Handoff Coder</strong> — github.com/handoffcl/handoff-coder</div>
-  <div class="ref-item"><strong>Handoff</strong> — handoff.cl</div>
+  <div class="ref-item"><strong>AI App Blueprint</strong> — implementación de referencia para el caso individual. Corre sobre Claude Code. Genera la estructura completa del repositorio desde una idea, sin intervención manual. Base desde la que se extiende la propuesta distribuida de este paper. <a href="https://github.com/handoffcl/ai-app-blueprint" target="_blank">github.com/handoffcl/ai-app-blueprint</a></div>
+  <div class="ref-item"><strong>Handoff Blueprint</strong> — misma filosofía del AI App Blueprint pero agnóstico al LLM. Corre sobre la extensión VSCode de Handoff. <a href="https://github.com/handoffcl/handoff-blueprint" target="_blank">github.com/handoffcl/handoff-blueprint</a></div>
+  <div class="ref-item"><strong>Handoff Coder</strong> — Modelfile para Ollama que convierte cualquier modelo base (Qwen, Llama, DeepSeek) en un agente con protocolo explícito: detectar → razonar → proponer → implementar. Evidencia empírica de que la estructura mueve la frontera de qué modelo necesitas — un modelo barato con un buen Modelfile rinde como uno caro en tarea estructurada. <a href="https://github.com/handoffcl/handoff-coder" target="_blank">github.com/handoffcl/handoff-coder</a></div>
+  <div class="ref-item"><strong>Handoff</strong> — web app de chat multi-LLM con historial persistente entre modelos. BYOK: las API keys van directo al proveedor. La extensión VSCode actúa como viewer de ese chat dentro del editor, conectando la conversación directamente con el código. Banco de pruebas real de la propuesta agnóstica al modelo. <a href="https://handoff.cl" target="_blank">handoff.cl</a></div>
 </div>
 
 <div class="paper-footer">
