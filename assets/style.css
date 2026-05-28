@@ -14,8 +14,7 @@
   --green-bg: #f0faf4;
   --amber: #92400e;
   --amber-bg: #fffbeb;
-  --page-width: 1040px;
-  --text-width: 720px;
+  --page-width: 1200px;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -24,13 +23,13 @@ html, body { background-color: #ffffff !important; }
 
 body {
   font-family: 'Libre Baskerville', Georgia, serif;
-  font-size: 11pt;
-  line-height: 1.8;
+  font-size: 12pt;
+  line-height: 1.78;
   color: var(--dark);
   background-color: #ffffff !important;
   max-width: var(--page-width);
   margin: 0 auto;
-  padding: 0 48px 80px;
+  padding: 0 64px 80px;
   border-top: 3px solid var(--accent);
 }
 
@@ -179,7 +178,6 @@ a.version-row:hover .version-title { text-decoration: underline; }
 .paper-nav a:hover { color: var(--black); }
 
 .paper-title-block {
-  max-width: var(--text-width);
   padding-bottom: 40px;
   margin-bottom: 48px;
   border-bottom: 2px solid var(--black);
@@ -187,7 +185,7 @@ a.version-row:hover .version-title { text-decoration: underline; }
 
 h1 {
   font-family: 'Libre Baskerville', serif;
-  font-size: 28pt;
+  font-size: 32pt;
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.5px;
@@ -221,9 +219,7 @@ h1 {
 }
 
 /* ── PAPER BODY ── */
-.paper-body {
-  max-width: var(--text-width);
-}
+.paper-body {}
 
 /* ── PAPER CONTENT ── */
 h2 {
