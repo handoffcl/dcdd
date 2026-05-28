@@ -24,7 +24,7 @@ html, body { background-color: #ffffff !important; }
 
 body {
   font-family: 'Libre Baskerville', Georgia, serif;
-  font-size: 10.5pt;
+  font-size: 11pt;
   line-height: 1.8;
   color: var(--dark);
   background-color: #ffffff !important;
@@ -228,7 +228,7 @@ h1 {
 /* ── PAPER CONTENT ── */
 h2 {
   font-family: 'Libre Baskerville', serif;
-  font-size: 15pt;
+  font-size: 16pt;
   font-weight: 700;
   color: var(--black);
   margin-top: 56px;
@@ -238,11 +238,9 @@ h2 {
 }
 
 h3 {
-  font-family: 'Inter', sans-serif;
-  font-size: 9pt;
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
+  font-family: 'Libre Baskerville', serif;
+  font-size: 12pt;
+  font-weight: 700;
   color: var(--dark);
   margin-top: 32px;
   margin-bottom: 12px;
@@ -255,7 +253,7 @@ em { font-style: italic; }
 
 code {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 8.5pt;
+  font-size: 9pt;
   background: var(--bg-code);
   padding: 1px 5px;
   border-radius: 2px;
@@ -263,7 +261,7 @@ code {
 
 pre {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 8pt;
+  font-size: 9pt;
   background: var(--bg-code);
   border: 1px solid var(--border);
   border-radius: 2px;
@@ -294,9 +292,9 @@ hr {
   border-bottom: 1px solid var(--border);
   padding: 20px 0;
   margin-bottom: 36px;
-  font-family: 'Inter', sans-serif;
-  font-size: 9.5pt;
-  line-height: 1.75;
+  font-family: 'Libre Baskerville', serif;
+  font-size: 11pt;
+  line-height: 1.8;
   color: var(--mid);
 }
 .opening-note p { margin-bottom: 12px; text-align: left; }
@@ -311,9 +309,9 @@ hr {
 
 .abstract-label {
   font-family: 'Inter', sans-serif;
-  font-size: 7pt;
+  font-size: 8pt;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--light);
   margin-bottom: 12px;
@@ -328,17 +326,17 @@ hr {
 
 .definition-label {
   font-family: 'Inter', sans-serif;
-  font-size: 7pt;
+  font-size: 8pt;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--black);
   margin-bottom: 12px;
 }
 
 .definition-text {
-  font-size: 10.5pt;
-  line-height: 1.75;
+  font-size: 11pt;
+  line-height: 1.8;
   color: var(--dark);
   margin-bottom: 10px;
   text-align: justify;
