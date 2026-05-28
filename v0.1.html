@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desarrollo Guiado por Contexto Distribuido — v0.1</title>
+<meta name="description" content="v0.1 — El problema y la dirección. Distributed Context-Driven Development.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html">← Todas las versiones</a>
+  <span>v0.1 · Mayo 2026</span>
+</nav>
+
+<h1>Desarrollo Guiado por<br>Contexto Distribuido</h1>
+<div class="paper-english">Distributed Context-Driven Development</div>
+<div class="paper-subtitle">Una aproximación práctica</div>
+<div class="paper-meta">Mayo 2026 &nbsp;·&nbsp; v0.1</div>
+<hr style="margin-top: 0; margin-bottom: 36px; border-color: #0f0f0f; border-width: 2px;">
+
+<div class="opening-note">
+  <p>Una nota antes de empezar. No importa en qué punto estés, si recién estás explorando el desarrollo con IA o llevas tiempo en esto. Este paper puede parecer complejo en su lectura, pero las ideas que describe no lo son tanto cuando lo que se va a construir tiene un propósito claro. Si el negocio está definido, la estructura se vuelve obvia. Si el problema es real, el contexto se organiza solo.</p>
+  <p>Esto es una propuesta para equipos que ya tienen un problema real y quieren resolverlo mejor, y no hacer tecnología por hacer. Como sabes, el trabajo individual con IA ya está bastante resuelto. Lo que todavía no está resuelto es cómo trabajan los equipos juntos.</p>
+  <p style="margin-bottom:0">Y este paper no viene a resolver ese problema. Viene a plantearlo, a proponer una dirección.</p>
+</div>
+
+<div class="abstract">
+  <div class="abstract-label">Resumen</div>
+  <p>El desarrollo de software con IA generativa resolvió el problema individual: un desarrollador con un agente bien configurado produce en días lo que antes tomaba semanas. Pero el problema colectivo sigue abierto. Cuando cinco desarrolladores trabajan en el mismo repositorio con cinco agentes, el resultado es cinco veces más rápido hacia la incoherencia semántica.</p>
+  <p style="margin-bottom:0">Este documento describe cómo llegamos hasta acá, qué existe hoy para el caso individual, y por qué el caso de equipo sigue sin resolverse. Propone una dirección: el <strong>Desarrollo Guiado por Contexto Distribuido</strong>.</p>
+</div>
+
+<div class="definition-box">
+  <div class="definition-label">¿Qué es el Desarrollo Guiado por Contexto Distribuido?</div>
+  <p class="definition-text">Es una forma de organizar el trabajo de software donde el contexto —las decisiones, contratos e intención de cada parte del sistema— vive dentro del repositorio, distribuido por módulo, y se valida automáticamente antes de que existan inconsistencias semánticas entre equipos y dentro del repositorio mismo.</p>
+  <p class="definition-text" style="margin-bottom:0">No es una herramienta ni un framework. Es una forma de estructurar cómo los agentes de IA y los desarrolladores humanos trabajan juntos.</p>
+</div>
+
+<h2>1. El problema que nadie ha resuelto aún</h2>
+
+<h3>1.1 Cómo están trabajando los equipos hoy</h3>
+
+<p>Antes de describir el problema, vale la pena ser honestos sobre la realidad. No todos los equipos están en el mismo punto. Hoy coexisten al menos tres formas de trabajar:</p>
+
+<p><strong>La mayoría: desarrollo sin IA.</strong> El flujo es el tradicional: tickets, ramas, PRs, code review humano. La IA no está en el loop o está en los márgenes. El problema de coordinación existe, pero es lento y manejable. El cuello de botella es escribir código, y eso regula naturalmente la velocidad del equipo.</p>
+
+<p><strong>Los que adoptaron IA básica: el agente como asistente.</strong> Usan Cursor, Copilot o Claude Code para acelerar la escritura. El agente genera código, el desarrollador revisa y ajusta. Sin estructura formal de contexto, sin harness, sin specs como contrato. El agente improvisa dentro de cada sesión.</p>
+
+<p><strong>Los más avanzados: desarrollo guiado por specs y contexto.</strong> Un grupo más pequeño, que incluye algunas empresas grandes y desarrolladores individuales, llegó a una forma más estructurada: specs escritas antes del código, contexto persistente entre sesiones, reglas explícitas que guían al agente. Herramientas como GitHub Speckit dieron estructura a este flujo, un punto de partida sólido, aunque limitado a la spec como documento estático sin contexto vivo ni harness. Otros adoptaron SDD (Spec Driven Development) como metodología completa.</p>
+
+<p>El problema que describimos no es de la mayoría todavía. Es el problema que le espera a todos cuando avancen hacia el tercer nivel. Y van a llegar.</p>
+
+<h3>1.2 El camino que muchos están recorriendo solos</h3>
+
+<p>Entre el nivel 2 y el nivel 3 hay un territorio intermedio que mucha gente está explorando ahora mismo. Desarrolladores y equipos que combinan ideas: un poco de harness por acá, un archivo de contexto por allá, specs antes del código, hooks que mantienen todo actualizado. Cada uno llega por su cuenta a combinaciones similares, con distintos nombres, pero con el mismo objetivo: que el agente entienda el proyecto tan bien como el desarrollador que lo guía.</p>
+
+<p>Lo que todas estas exploraciones tienen en común es que siguen siendo <strong>un desarrollador trabajando con su agente</strong>. El problema está contenido. El contexto es de una sola persona. Las decisiones las toma una sola mente.</p>
+
+<p>El momento en que ese desarrollador se convierte en un equipo, todo cambia.</p>
+
+<h3>1.3 El escenario en el nivel más avanzado</h3>
+
+<p>Tomemos el tercer grupo —los que ya trabajan con specs y contexto estructurado— y escalemos de un desarrollador a cinco:</p>
+
+<pre>Dev 1  →  user story: cupones QR        →  toca módulo cafes/
+Dev 2  →  user story: perfil cafetería  →  toca módulo cafes/
+Dev 3  →  user story: geolocalización   →  toca módulo cafes/ + API
+Dev 4  →  user story: reseñas           →  toca módulo reviews/ + cafes/
+Dev 5  →  user story: búsqueda          →  toca módulo api/ + cafes/</pre>
+
+<p>Cada agente arrancó leyendo el mismo contexto central al inicio de la sesión. Cuatro horas después, ese contexto ya no refleja la realidad: tres desarrolladores modificaron contratos internos, dos cambiaron el schema de la DB, uno refactorizó auth.</p>
+
+<div class="pull-quote">Nadie lo sabe. Git no lo detecta, al menos no en los flujos actuales. Los tests pasan. El sistema falla en producción.</div>
+
+<p>Y esto no pasa porque el equipo sea descuidado. Pasa porque la coordinación semántica entre múltiples agentes humanos trabajando en paralelo todavía no está resuelta de forma práctica — al menos no para este caso específico.</p>
+
+<h3>1.4 Más allá del merge de código, ¿Git como orquestador?</h3>
+
+<p>Git hace exactamente lo que fue diseñado para hacer: versionar texto, orquestar el flujo de código, detectar superposición de cambios. El problema no es Git. Es que todavía no existe la capa que hace lo mismo para la intención y las decisiones.</p>
+
+<p>Cuando Dev 1 cambia el contrato interno de una función y Dev 2 construye su feature asumiendo el contrato anterior, Git ve dos archivos distintos que no se superponen. No hay conflicto. El merge es limpio. La incoherencia semántica es invisible.</p>
+
+<h3>1.5 La IA no creó este problema. Lo aceleró.</h3>
+
+<p>En el nivel 1 —sin IA— el problema de coordinación existe pero es lento. Un desarrollador tarda horas en implementar una feature. Eso da tiempo para conversaciones y revisiones que actúan como sincronización implícita.</p>
+
+<p>En el nivel 3 —con specs y agentes— el mismo desarrollador implementa la feature en minutos. La velocidad de producción supera ampliamente la velocidad de sincronización del equipo.</p>
+
+<p><strong>Más velocidad sin coordinación semántica no es progreso. Es deuda técnica acumulándose más rápido de lo que el equipo puede procesarla.</strong></p>
+
+<hr>
+
+<h2>2. Estado del arte</h2>
+
+<h3>2.1 Por qué apareció la ingeniería de contexto</h3>
+
+<p>Los conceptos que sustentan el desarrollo guiado con IA no son nuevos. El <strong>harness</strong> tiene raíces en los años 90: en testing, control de calidad y sistemas de infraestructura era el mecanismo que envolvía el código o el sistema bajo prueba —redes, hardware, entornos de despliegue— definiendo los límites dentro de los cuales podía operar. En IA reaparece alrededor de 2020 bajo el nombre de "guardrails" —misma idea, nuevo contexto.</p>
+
+<p>La trayectoria del concepto lo dice todo:</p>
+
+<div class="timeline">Años 90    → harness en testing e infraestructura física
+2016/17    → Harness.io — el concepto migra al mundo DevOps y CI/CD
+2020       → EleutherAI LM Evaluation Harness — migra a evaluación de modelos IA
+2023/24    → guardrails y harness en flujos de desarrollo con agentes</div>
+
+<p>Los conceptos no mueren. Se reflotán cuando el problema que resuelven vuelve a aparecer en otro contexto. Nadie está inventando nada desde cero, está reconociendo que un problema viejo aparece en una forma nueva.</p>
+
+<p>Un hito concreto: EleutherAI, fundada en julio de 2020, desarrolló el <strong>LM Evaluation Harness</strong> —un framework para envolver modelos de lenguaje con reglas explícitas de evaluación. No era un harness de desarrollo, era de evaluación. Pero la idea central ya estaba ahí: acotar al agente con un contrato explícito de operación.</p>
+
+<p>Algunos creen que estas ideas nacieron con el boom de los LLMs en 2023. Pero los mismos que construyeron los modelos ya sabían lo que se venía. <strong>No nacieron ahora. Maduraron ahora.</strong></p>
+
+<p>Las <strong>specs como contrato</strong> son aún más antiguas:</p>
+
+<div class="timeline">1950s  → Daniel McCracken: resolver problemas antes de escribir código
+1960s  → NASA proyecto Mercury: técnicas spec-first en ingeniería
+2004   → formalizado académicamente como síntesis de TDD + Design by Contract
+2020s  → renacimiento con LLMs y workflows agénticos
+2025   → GitHub Speckit: populariza el flujo para equipos con IA</div>
+
+<p>SDD (Spec Driven Development) lleva esto más lejos: la spec no es solo un paso previo, es el eje que organiza todo el flujo de desarrollo. GitHub Speckit dio estructura a ese flujo, un punto de partida sólido, aunque limitado: te da la forma de la spec, no el contexto vivo que necesita el agente entre sesiones ni el harness que guía su comportamiento.</p>
+
+<p>Hasta hace pocos años, un prompt bien escrito era suficiente. Los modelos tenían ventanas de contexto cortas —4k, 8k tokens— y el flujo era simple: instrucción → respuesta → fin. Todo cambió cuando los modelos escalaron a 32k, 100k, 200k tokens. El problema ya no era qué tan listo era el modelo. Era cómo alimentarlo con el contexto correcto de forma consistente a lo largo del tiempo.</p>
+
+<p>En 2023 los modelos no navegaban internet, no ejecutaban herramientas, no mantenían estado entre sesiones. Solo procesaban lo que les ponías en el prompt o lo que habías embebido escaneando documentos. En ese contexto, pedirle arquitectura modular sostenida en el tiempo era pedirle algo que estructuralmente no podía dar. El resultado era siempre el mismo: un monolito. Código que funcionaba en ese momento y era inmanejable al día siguiente.</p>
+
+<p><em>El monolito no era un fallo del modelo, era el límite natural de lo que era posible entonces.</em></p>
+
+<p>De ese proceso surgieron preguntas concretas: ¿cómo se estructura un proyecto para que la IA trabaje en él de forma coherente entre sesiones? ¿cómo evitar que el agente improvise sin contexto? ¿cómo hacer que el código generado sea sostenible, no solo funcional en ese momento?</p>
+
+<p>Nació la <strong>ingeniería de contexto</strong>: la disciplina de diseñar, estructurar y mantener el contexto que consume un agente. El harness viejo + la spec antigua + el contexto vivo nuevo. Tres ideas de distintas épocas que encontraron un propósito común.</p>
+
+<p>Es importante ser honestos sobre algo: las empresas que construyeron los LLMs no estaban descubriendo hacia dónde iba esto mientras lo construían. Son parte del camino que de alguna manera ya se venía lucidando cuando empezaron a salir los modelos más grandes. Nosotros, y muchos otros, llegamos a los mismos conceptos porque el problema nos llevó ahí. Pero ellos ya sabían que íbamos a llegar.</p>
+
+<p>Es imposible construir algo de esa escala sin entender las consecuencias del cambio de variable. Como las leyes de Newton: no se descubren, se deducen. Si se diseña un modelo que predice a esa profundidad, ya se sabe lo que va a necesitar para ser útil en el mundo real: estructura, contexto, contratos, harness. No es clarividencia. Es física del problema, al menos eso creo.</p>
+
+<p><strong>Las herramientas del mercado</strong> muestran dónde está el arte hoy:</p>
+
+<div class="tool-entry"><span class="tool-name">GitHub Copilot</span>: fuerte en el pipeline de código. El contexto vive en el editor de cada dev, muere al cerrar la sesión.</div>
+<div class="tool-entry"><span class="tool-name">Cursor</span>: el mejor agente de sesión disponible. "Los desarrolladores especificarán intención a través de lenguaje natural." Implementación individual. Sin mecanismo de coordinación entre instancias.</div>
+<div class="tool-entry"><span class="tool-name">Claude Code</span>: el más poderoso en autonomía y contexto largo. Su <code>CLAUDE.md</code> persiste instrucciones entre sesiones. Pero es un archivo plano, global, sin ownership por módulo ni mecanismo de merge entre desarrolladores.</div>
+<div class="tool-entry" style="margin-bottom:16px"><span class="tool-name">Shopify / Roast</span>: el caso más avanzado documentado públicamente. Un orquestador de workflows con guardrails explícitos para tareas internas de ingeniería. No resuelve la coordinación semántica entre desarrolladores trabajando en paralelo.</div>
+
+<p>El monorepo se convirtió en la unidad natural de trabajo. Todo en un solo lugar, legible por el agente en una sola sesión. El problema de contexto para un desarrollador estaba, en principio, resuelto.</p>
+
+<h3>2.2 El desarrollo multi-LLM como paso previo</h3>
+
+<p>Entre las herramientas del mercado y el gap del equipo hay un paso intermedio que está emergiendo: herramientas —muchas open source— que hacen seamless trabajar con distintos LLMs en el mismo flujo de desarrollo. Continue.dev, Aider, Cline, y otros apuntan en esa dirección. No resuelven el problema de equipo, pero iluminan algo importante.</p>
+
+<p>Para que el contexto distribuido funcione en un equipo real, cualquier agente —independiente del modelo que use cada desarrollador— debe poder leer y operar sobre el mismo sistema de contexto. Un dev con Claude, otro con Gemini, otro con Llama. Si el contexto está atado a un solo modelo, no escala.</p>
+
+<p><strong>Eso no es una decisión técnica. Es una decisión de estándar.</strong></p>
+
+<p>El túnel es largo. Lo que viene después del caso de equipo, no lo sabemos con certeza. Y probablemente tampoco lo sepa una sola organización, porque este no es un problema de los que construyen los modelos. Es un problema de los que adoptan IA para hacer más fácil el desarrollo de software. Microsoft, GitHub, Cursor, los equipos de ingeniería que están en esa transición. Ellos están aprendiendo también, aunque con más recursos.</p>
+
+<h3>2.3 El gap que persiste</h3>
+
+<p>El patrón harness + ingeniería de contexto + spec-first resuelve bien el caso de <strong>un desarrollador + un agente + un monorepo</strong>.</p>
+
+<p>Lo que ninguna de estas soluciones resuelve es la pregunta siguiente:</p>
+
+<blockquote><p>¿Qué pasa cuando cinco agentes toman decisiones en paralelo sobre el mismo repositorio?</p></blockquote>
+
+<p>El contexto central es único. Si dos desarrolladores hacen commit simultáneamente, el segundo sobreescribe al primero. Las specs son planas, sin relación explícita entre sí ni con el módulo que afectan. Dos agentes pueden tomar decisiones contradictorias sobre el mismo dominio sin saberlo.</p>
+
+<p>Existe Git para versionar código. Existen vector stores para memoria de agentes. Existen orquestadores para pipelines. Hasta el momento no hemos visto una capa de coordinación semántica para equipos de desarrollo con IA, quizás existe, o alguien ya la está desarrollando. Si es así, nos interesa saberlo.</p>
+
+<hr>
+
+<h2>3. La propuesta</h2>
+
+<h3>3.1 El principio central</h3>
+
+<p>El contexto debe distribuirse siguiendo los mismos límites que la arquitectura modular. Si el código está organizado por dominios, el contexto debe estarlo también.</p>
+
+<p>No se trata de reemplazar Git. Se trata de agregar una capa de validación semántica que corre antes de que el código llegue al repositorio remoto:</p>
+
+<pre>Flujo actual:
+código  →  commit  →  push  →  Git remoto
+
+Flujo propuesto:
+código  →  commit  →  validación semántica  →  push  →  Git remoto
+                            ↑
+                     esta es la capa nueva</pre>
+
+<p>El commit actualiza el contexto del módulo localmente. El push es el momento donde el orquestador valida que lo que se construyó sigue el estándar y no contradice lo que construyeron los demás. Sin bloquear el flujo. Sin reportar nada innecesario. Solo coherencia semántica antes de que otros lo vean.</p>
+
+<h3>3.2 La nueva estructura de repositorio</h3>
+
+<p>La estructura no es arbitraria. Responde a un principio: el contexto debe seguir los mismos límites que el código. Si el código está organizado por dominios, el contexto también. Si un módulo tiene ownership de ciertos datos, también tiene ownership de su contexto.</p>
+
+<p>Un contexto central único es un punto de falla. Dos desarrolladores modificándolo simultáneamente generan conflictos. Un módulo que creció tiene que compartir espacio con todos los demás. El orquestador no puede saber qué cambió en qué dominio sin leer todo.</p>
+
+<p>La distribución resuelve eso: cada módulo es dueño de su contexto, el orquestador lee solo lo que necesita, y el central es el resultado del merge, no la fuente.</p>
+
+<pre>repo/
+├── docs/
+│   ├── vision/
+│   ├── constitution/
+│   │   ├── principles.md
+│   │   └── invariants.md      ← reglas globales que ningún módulo puede romper
+│   ├── architecture/
+│   │   ├── overview.md
+│   │   └── decisions/         ← ADRs globales
+│   ├── context/
+│   │   └── central.md         ← resultado del merge, no la fuente
+│   └── modular/
+│       ├── modules.yaml       ← índice machine-readable de todos los módulos
+│       └── [dominio]/
+│           ├── module.yaml    ← legible por máquina, base del orquestador
+│           ├── context.md     ← estado actual, corto y operativo
+│           ├── contracts.md   ← qué expone y qué consume
+│           ├── invariants.md  ← reglas duras del módulo
+│           ├── decisions/     ← ADRs del módulo
+│           ├── semantic-changelog.md  ← qué cambió semánticamente
+│           └── specs/
+│
+├── .context/
+│   └── agents/
+│       └── registry.local.yaml  ← estado efímero, no se versiona igual
+│
+├── src/
+└── scripts/
+    ├── update_module_context.py
+    └── update_central_context.py</pre>
+
+<p><strong>Por qué cada archivo:</strong></p>
+
+<p><strong>module.yaml</strong>: es lo que hace al orquestador técnicamente posible. Sin un formato legible por máquina, el orquestador tiene que inferir todo del texto libre. Declara el módulo, su owner, sus contratos públicos, lo que consume de otros módulos, sus invariantes y su versión semántica.</p>
+
+<p><strong>context.md</strong>: estado actual del módulo, corto y operativo. No es documentación histórica ni archivo de decisiones. Es lo que el agente lee al arrancar su sesión para entender dónde está parado.</p>
+
+<p><strong>contracts.md</strong>: qué expone el módulo y qué consume de otros. Si cambia, el orquestador lo detecta y verifica que los consumidores estén actualizados.</p>
+
+<p><strong>invariants.md</strong>: reglas que no se pueden romper. El orquestador las usa como límite duro. Ejemplo: "solo auth/ puede exponer datos de usuarios", "location es requerido para cafés públicos".</p>
+
+<p><strong>decisions/</strong>: ADRs por módulo. El historial del por qué se decidió algo. Vive aquí y no en context.md para que este último se mantenga operativo y corto.</p>
+
+<p><strong>semantic-changelog.md</strong>: qué cambió semánticamente, no en código. Diferente al git log: registra cuándo un contrato cambió, cuándo una invariante se actualizó, cuándo el ownership de un dato se movió.</p>
+
+<p><strong>registry.local.yaml</strong>: estado efímero. Registra quién está trabajando en qué módulo ahora mismo. No se versiona igual que el resto porque "quién trabaja ahora" es información de runtime, no historial semántico.</p>
+
+<div style="page-break-inside: avoid">
+<p>Un ejemplo de <code>module.yaml</code>:</p>
+
+<pre>module: cafes
+owner: team-commerce
+status: active
+
+responsibilities:
+  - perfil de cafetería
+  - horarios y metadata pública
+  - geolocalización
+
+public_contracts:
+  - getCafePublicProfile
+  - searchCafes
+  - updateCafeProfile
+
+consumes:
+  - auth.currentUser
+  - geo.normalizeAddress
+
+invariants:
+  - "Solo cafes/ puede modificar datos del perfil de cafetería"
+  - "location es requerido para cafés públicos"
+
+semantic_version: 1
+last_updated: 2026-05-26</pre>
+</div>
+
+<p>Todo vive en el repositorio. No hay base de datos externa, no hay servicio separado, no hay infraestructura adicional que mantener. Git versiona todo: el código, el contexto por módulo, los contratos, el historial de decisiones semánticas, el orquestador mismo.</p>
+
+<pre>src/           →  código              →  versionado por Git
+docs/modular/  →  contexto por módulo →  versionado por Git
+context/       →  contexto central    →  versionado por Git
+.context/      →  registry de agentes →  versionado por Git
+scripts/       →  orquestador         →  versionado por Git</pre>
+
+<p>Y hay algo más: el historial de Git se convierte en el historial semántico del proyecto. No solo es posible ver qué cambió en el código — también qué decisiones se tomaron, qué contratos se modificaron, qué conflictos semánticos se resolvieron y cuándo.</p>
+
+<p><strong>Merge de código</strong>: ya existe. Git lo resuelve. Conflictos de texto, detectables automáticamente, resolución técnica.</p>
+
+<p><strong>Merge de contexto</strong>: no existe. Conflictos de intención, no detectables por Git, requieren comprensión semántica. Ocurre cuando dos desarrolladores tomaron decisiones coherentes individualmente pero incoherentes globalmente. Solo un agente que lee ambos contextos puede detectarlo.</p>
+
+<h3>3.3 El flujo multi-equipo</h3>
+
+<pre>Al arrancar una sesión:
+Dev abre su editor
+  → agente lee context/central.md            (visión global del equipo)
+  → agente lee modular/su-módulo/context.md  (su dominio)
+  → registra presencia en agents/registry.yaml
+  → arranca con contexto real y actualizado
+
+Al hacer commit:
+Dev hace commit
+  → update_module_context.py actualiza el contexto de su módulo
+  → registra decisiones tomadas y contratos modificados
+  → contexto del módulo queda actualizado localmente
+
+Antes del push — la capa de orquestación:
+Dev intenta hacer push
+  → pre-push hook activa el orquestador
+  → orquestador lee context/central.md
+  → compara contra el contexto del módulo actualizado
+  → valida que lo construido sigue el estándar
+  → detecta si hay conflicto semántico con otro módulo
+  → alerta si hay incoherencia — el dev decide cómo resolverlo
+  → merge al central si todo es coherente
+  → push procede</pre>
+
+<h3>3.4 El rol del orquestador</h3>
+
+<p>El orquestador no es un humano ni un manager. Es un agente cuyo único trabajo es mantener la coherencia del sistema de contexto distribuido: lee los contextos de módulo, compara contra el central, detecta contradicciones, alerta antes de que el problema llegue al código.</p>
+
+<p>No escribe código. No toma decisiones de arquitectura.</p>
+
+<hr>
+
+<h2>4. Límites conocidos</h2>
+
+<p><strong>Los conflictos en tiempo real no están resueltos.</strong> Si dos desarrolladores trabajan simultáneamente en módulos acoplados, el conflicto se detecta al commit, no mientras trabajan.</p>
+
+<p><strong>La resolución de conflictos sigue siendo humana.</strong> El orquestador detecta; no decide. La resolución es una conversación del equipo.</p>
+
+<p><strong>Requiere boundaries modulares claros.</strong> En repos con alta deuda técnica donde la separación de responsabilidades es ambigua, el ownership de contexto por módulo es difícil de establecer.</p>
+
+<hr>
+
+<h2>5. Preguntas abiertas</h2>
+
+<h3>¿Dónde vive el orquestador?</h3>
+
+<p>Es quizás la pregunta más concreta y sin respuesta definitiva todavía:</p>
+
+<div class="option-block">
+  <div class="option-label">Opción A: Local: pre-push hook en el repo</div>
+  Corre en la máquina del dev antes de pushear. Simple, sin infraestructura externa. El problema: requiere que el dev tenga el contexto actualizado de todos los módulos localmente.
+</div>
+
+<div class="option-block">
+  <div class="option-label">Opción B: CI/CD: GitHub Actions, GitLab CI</div>
+  Corre en el pipeline después del push. Más confiable, siempre actualizado. El problema: el conflicto llega después del push, no antes, ya está en el remoto.
+</div>
+
+<div class="option-block">
+  <div class="option-label">Opción C: Servidor compartido del equipo</div>
+  Siempre actualizado, siempre disponible para todos. El problema: infraestructura adicional que mantener.
+</div>
+
+<div class="option-block">
+  <div class="option-label">Opción D: Híbrido: pre-push local + CI como validación final</div>
+  Lo mejor de ambos mundos. El problema: más complejidad de setup.
+</div>
+
+<p>No tenemos una respuesta definitiva. Es parte de lo que queremos debatir.</p>
+
+<h3>¿Qué modelo para qué tarea?</h3>
+
+<p>Hoy la decisión de qué modelo usar es manual y arbitraria. Lo que falta es una capa de decisión:</p>
+
+<pre>repo pequeño + feature simple    →  modelo chico, rápido, barato
+repo grande + arquitectura       →  modelo grande, contexto largo
+refactor complejo                →  modelo con razonamiento
+spec nueva desde cero            →  modelo creativo
+validación semántica             →  modelo preciso, no creativo</pre>
+
+<p>El umbral mínimo que vemos hoy para que el estándar funcione es <strong>128k tokens de contexto</strong>. Por debajo de eso el agente empieza a olvidar partes críticas del contexto. Ese umbral ya está disponible en modelos open source y comerciales a distintos rangos de precio — la arquitectura no está atada a ninguno.</p>
+
+<h3>¿Cuánto cuesta realmente?</h3>
+
+<p>Hay reportes de empresas de primer nivel que han consumido presupuestos anuales de IA en meses. No en años — en meses. Y no porque la tecnología sea mala, sino porque nadie planificó cómo iba a escalar el consumo cuando pasara de experimental a organizacional.</p>
+
+<p>El patrón se repite: adopción rápida de agentes, sin estructura de control, con costos que crecen de forma impredecible hasta que alguien corta el presupuesto o cambia de herramienta. La decisión termina siendo financiera, no técnica.</p>
+
+<p>Sin estructura, el agente parte de cero en cada sesión. Relee todo, reentiende todo, improvisa todo. El costo no baja con el tiempo. Con contexto distribuido la curva es distinta: construir de cero tiene un costo alto — es normal, se está definiendo todo. Pero las iteraciones venideras son más baratas porque el contexto hace el trabajo que antes hacían los tokens. El agente no reentiende, sigue el patrón.</p>
+
+<p>No tenemos métricas propias para demostrarlo todavía. Es una de las preguntas abiertas que queremos responder con evidencia real.</p>
+
+<h3>Otras preguntas sin respuesta</h3>
+
+<p>¿Es el orquestador bloqueante o solo informativo? ¿Cómo se establece el ownership de módulo en equipos que rotan? ¿El patrón escala a más de un repo? ¿Puede cualquier LLM leer y operar sobre el mismo sistema de contexto sin fricciones?</p>
+
+<hr>
+
+<h2>6. El desarrollador en este paradigma</h2>
+
+<p>Hay una conversación que se repite: la IA va a dejar a los desarrolladores sin trabajo. Hasta el momento no vemos evidencia de que eso esté pasando — al menos no de la forma que se describe.</p>
+
+<p>No existe todavía un sistema autónomo que tome todos los requerimientos de un proyecto y los ejecute sin instrucción inicial, sin validación, sin coordinación humana. Los sistemas multi-agente existen, pero necesitan un harness que los acote, una instrucción que los oriente, y un humano que valide que el resultado es correcto para el negocio. Sin eso, son peligrosos.</p>
+
+<p>La paradoja es esta: cuanto más autónomo se quiere que sea el agente, más importante se vuelve el humano que define el contexto, el harness y los criterios de validación.</p>
+
+<p>Lo que sí está cambiando es qué tipo de trabajo hace el desarrollador:</p>
+
+<pre>Antes          →  escribe código
+Con IA básica  →  revisa código que genera el agente
+Con estructura →  define intención, diseña contexto,
+                  valida coherencia semántica,
+                  coordina decisiones entre módulos</pre>
+
+<div class="pull-quote">El desarrollador que sabe definir intención, estructurar contexto y validar resultados semánticos vale más en ese mundo, no menos.</div>
+
+<p>Los desarrolladores deben evolucionar. No desaparecer.</p>
+
+<hr>
+
+<h2>7. El problema de siempre, el recurso que cambió</h2>
+
+<p>En 2009, cuando la virtualización empezaba a transformar la infraestructura IT, José Juan Mora Pérez documentó en <em>Capacity Planning IT: Una aproximación práctica</em> algo que hoy se repite con la IA: el ritmo con el que avanza la tecnología obliga a reducir el tiempo de sincronización, y las compañías deben conocer su capacidad real antes de que la demanda del negocio las alcance.</p>
+
+<p>José Juan Mora Pérez criticaba algo concreto: que el Capacity Planning se hacía <em>"desde una perspectiva puramente IT, sin tener en cuenta cuáles son las necesidades del Negocio."</em> El mismo error se está repitiendo hoy. Las empresas adoptan IA desde la perspectiva de la herramienta —qué modelo es más potente, qué IDE tiene mejor integración— sin entender qué estructura necesita el negocio para usarla bien a escala. El resultado es el mismo que en 2009: colapso cuando la demanda llega, factura que nadie anticipó.</p>
+
+
+
+<p>El recurso escaso cambió. Antes era:</p>
+
+<pre>CPU      →  cómputo
+RAM      →  memoria
+Storage  →  almacenamiento</pre>
+
+<p>Hoy es:</p>
+
+<pre>GPU      →  cómputo IA
+NVRAM    →  memoria de GPU, limitada por modelo
+Tokens   →  consumo de contexto por sesión</pre>
+
+<p>Y el problema de capacity planning se volvió más complejo porque hay dos capas simultáneas. La capa de infraestructura: GPU escasa y cara, NVRAM limitada, si no se tiene suficiente, el modelo no corre. Y la capa de consumo: tokens por sesión, contexto por agente, si no existe estructura, los recursos se desperdician.</p>
+
+<p>Las empresas que cortan presupuesto de IA probablemente están fallando en ambas capas — pagando por GPU e inferencia que no necesitaban porque sus agentes sin estructura consumen de más.</p>
+
+<p>El contexto distribuido bien estructurado no es solo una solución al problema semántico. Es también una solución al problema de capacity planning de IA: cada agente lee solo el contexto de su módulo, no todo el repositorio. El orquestador decide qué modelo usar según la complejidad de la tarea. El costo se vuelve predecible y justificable por equipo.</p>
+<p>Al menos eso creo. No tenemos datos para comprobarlo todavía. Lo que sí es claro es que siempre hay un costo inicial — es normal, se está construyendo desde cero. Pero en el tiempo ese costo debería disminuir, simplemente porque el proyecto nunca vuelve al estado cero. El contexto acumulado hace el trabajo que antes hacían los tokens. Esa es la diferencia entre construir y agregar.</p>
+
+<p><strong>El principio es el mismo que en 2009. El recurso escaso cambió.</strong></p>
+
+<p>Y el problema de fondo también es el mismo: el capacity planning dependía de proyecciones de negocio que muchas veces no existían o eran imprecisas. Con IA se amplifica — no solo no sabemos cuánto va a crecer el negocio, tampoco sabemos si ese crecimiento va a venir con equipos tradicionales, con agentes, o con alguna combinación que todavía no existe. Planificar capacidad de IA sin saber hacia dónde va el negocio es tan difícil como lo era en 2009. Quizás más.</p>
+
+<hr>
+
+<h2>Cierre</h2>
+
+<p>No tenemos la respuesta completa. Tampoco tenemos todavía datos propios que prueben el impacto con métricas formales. Pero sí creo que el contexto —bien estructurado, distribuido y versionado— es el punto de partida correcto, al menos hasta la fecha en que escribo esto.</p>
+
+<p>No hace falta creer. Basta con mirar cómo trabajan los equipos hoy.</p>
+
+<p>Una célula de cinco personas tocando el mismo repositorio, muchas veces el core del negocio. O empresas donde el producto es uno solo, separado por capacidades, dominios o módulos —como pasa en muchos ERPs—, pero donde todo termina viviendo en el mismo repo.</p>
+
+<p>Antes, el problema era llegar a producción sin generar una incidencia. No era únicamente una cuestión de organización, ramas o merges. Era lograr que tantas manos tocando el mismo sistema no rompieran algo que el resto del equipo asumía como estable. Git resolvía conflictos de texto. Los tests validaban comportamientos conocidos. El code review agregaba criterio humano.</p>
+
+<p><strong>Con IA, el problema cambia de escala.</strong></p>
+
+<p>Ya no se trata solo de cuántos cambios hubo en el repo, quién los hizo o si los tests pasan. El nuevo problema es que la IA siga entendiendo el desarrollo y la estructura del sistema. Que no pierda las decisiones anteriores. Que no rompa patrones existentes. Que no trate cada sesión como si el proyecto empezara de cero. Que no construya algo que funciona en su módulo, pero contradice silenciosamente al resto.</p>
+
+<p>Por eso vuelven conceptos que parecían viejos: specs, contratos, harness, guardrails, contexto. No vuelven por nostalgia. Vuelven porque el problema que resolvían reapareció en otro lugar.</p>
+
+<p>Alguien podría decir que esto se resuelve con coordinación de equipo. Otro podría decir que lo importante es deployar rápido, porque la eficiencia se mide por velocidad de entrega. Tal vez los dos tengan una parte de razón.</p>
+
+<p>Pero ninguno resuelve por completo la pregunta de fondo:</p>
+
+<p><em>qué pasa cuando cinco agentes, cada uno con su propio contexto, toman decisiones distintas sobre el mismo sistema al mismo tiempo.</em></p>
+
+<p>Ese es el problema real.</p>
+
+<p><strong>Y ese sí lo creo.</strong></p>
+
+<hr>
+
+<div style="page-break-inside: avoid">
+<h2>Lo que viene en la v0.2</h2>
+
+<p>Esta versión plantea la dirección y abre el debate. La v0.2 irá más lejos en dos frentes concretos.</p>
+
+<p><strong>Auto-update distribuido basado en blueprint.</strong> Si bien la arquitectura modular distribuida y la automatización local de ganchos de contexto minimizan el impacto de las mutaciones cotidianas del código, subsiste una interrogante crítica: ¿es el aislamiento modular suficiente para garantizar la integridad del sistema a largo plazo? La experiencia preliminar sugiere que, aunque el desacoplamiento reduce los conflictos estructurales directos, la validación formal de la coherencia semántica frente a la visión central del producto sigue siendo una frontera abierta. La v0.2 explorará cómo el mismo blueprint que hoy resuelve el monorepo individual puede extenderse al entorno distribuido, generando y actualizando automáticamente toda la estructura de contexto por commit, sin intervención del desarrollador.</p>
+</div>
+
+<div style="page-break-inside: avoid">
+<p><strong>El orquestador como vigía de invariantes.</strong> El mayor riesgo no es el conflicto visible que Git detecta. Es el cambio silencioso: una mutación que respeta formalmente el contrato del módulo pero viola la lógica de negocio central.</p>
+
+<p>La estructura de repositorio propuesta, con el contexto distribuido por módulo y el auto-update por commit, resuelve el 80 o 90% del problema de coordinación en equipos con IA. El orquestador semántico no es el sistema, es la última línea de defensa: el vigía que atrapa ese 10 o 20% restante, los cambios silenciosos que pasan todos los filtros estructurales pero violan los principios centrales del producto.</p>
+
+<p><strong>Piensa en esto:</strong> el Módulo A maneja pagos, el Módulo B maneja suscripciones. Un desarrollador, vía agente, hace un cambio en pagos que técnicamente respeta el formato del <code>module.yaml</code> — sigue devolviendo un string y un booleano, todo correcto estructuralmente. Pero cambió una regla de negocio: antes, si el pago fallaba tres veces, el sistema daba tres días de gracia. Ahora suspende la cuenta de inmediato.</p>
+
+<p>El hook local lo procesa sin chistar. El commit es perfecto. Los tests pasan. Pero acabas de violar la constitución del producto y rompiste la lógica esperada por el módulo de suscripciones, sin que ningún test tradicional ni schema local saltara. El problema llega silencioso a producción.</p>
+
+<p>El orquestador semántico es el único que puede leer ese cambio contra los principios inmutables definidos en el repositorio central — <code>constitution</code>, <code>product-vision</code>, <code>plan</code>, <code>architecture</code> — y decir: "esto viola el principio de gracia al usuario — merge bloqueado." Su trabajo no es revisar cómo está escrito el código. Es vigilar que ningún módulo rompa la lógica de visión, constitución y arquitectura que define lo que el sistema prometió ser. No opera como árbitro de opiniones entre modelos, sino como guardián de lo que está escrito en el centro. Cómo diseñar ese vigía sin romper el flujo del equipo es la pregunta que queremos responder en la próxima versión.</p>
+
+<p>El paradigma no es el LLM. Es la estructura. Cualquier modelo que permita leer el contexto distribuido debería poder operar sobre él. Esa es la apuesta.</p>
+</div>
+
+<hr>
+
+<div style="page-break-before: always">
+<h2>Referencias</h2>
+
+<div class="references">
+  <div class="ref-item"><strong>Capacity Planning IT: Una aproximación práctica</strong> — José Juan Mora Pérez (2009)</div>
+  <div class="ref-item"><strong>Spec Driven Development: From History to Modern AI Workflows</strong> — medium.com/@reza.ra</div>
+  <div class="ref-item"><strong>EleutherAI LM Evaluation Harness</strong> — github.com/EleutherAI/lm-evaluation-harness (2020)</div>
+  <div class="ref-item"><strong>Harness.io</strong> — plataforma CI/CD, fundada 2016/17</div>
+  <div class="ref-item"><strong>GitHub Speckit</strong> — github.com/github/speckit</div>
+  <div class="ref-item"><strong>Shopify Engineering: Introducing Roast</strong> (2025)</div>
+  <div class="ref-item"><strong>Gartner</strong> (citado en 8allocate, 2026) — 80% de equipos grandes reorganizados en unidades IA-aumentadas para 2030</div>
+</div>
+
+<h3 style="margin-top: 28px; font-size: 10pt; color: var(--mid); letter-spacing: 0.05em;">Context-Driven Development — trabajos relacionados</h3>
+
+<div class="references">
+  <div class="ref-item"><strong>Conductor / Google</strong> — Context-Driven Development para Gemini CLI (dic. 2025). developers.googleblog.com/conductor-introducing-context-driven-development-for-gemini-cli/</div>
+  <div class="ref-item"><strong>Waleed Kadous</strong> — "Welcome to the Context-Driven Development Party" — waleedk.medium.com/welcome-to-the-context-driven-development-party-8a0fb58d3f20</div>
+  <div class="ref-item"><strong>cdd.dev</strong> — comunidad de ensayos sobre desarrollo agéntico y flujos context-driven</div>
+  <div class="ref-item"><strong>Pravir Raghu</strong> — CDD en monorepo individual (el caso que este paper da por resuelto) — medium.com/@pravir.raghu</div>
+</div>
+
+<h3 style="margin-top: 28px; font-size: 10pt; color: var(--mid); letter-spacing: 0.05em;">Coordinación multi-agente — trabajos relacionados</h3>
+
+<div class="references">
+  <div class="ref-item"><strong>Augment Code</strong> — Multi-Agent Coding Workspace (marzo 2026). augmentcode.com/guides/how-to-run-a-multi-agent-coding-workspace — abordan la incoherencia semántica entre agentes en paralelo por aislamiento (un archivo, un dueño). El caso que este paper ataca es distinto: dos devs que no tocan el mismo archivo pero igual se contradicen.</div>
+  <div class="ref-item"><strong>Addy Osmani</strong> — "The Code Agent Orchestra" — addyosmani.com/blog/code-agent-orchestra/</div>
+  <div class="ref-item"><strong>Semantic Fusion: Verifiable Alignment in Decentralized Multi-Agent Systems</strong> — arXiv, enero 2026. arxiv.org/pdf/2601.12580 — formalización teórica del problema de coordinación semántica descentralizada. Contexto de defensa, agentes autónomos, sin Git ni equipos humanos. Es el primo teórico de esta propuesta.</div>
+</div>
+
+<h3 style="margin-top: 28px; font-size: 10pt; color: var(--mid); letter-spacing: 0.05em;">Trabajo en desarrollo — Handoff</h3>
+
+<div class="references">
+  <div class="ref-item"><strong>AI App Blueprint</strong> — implementación de referencia para el caso individual, base desde la que se extiende la propuesta distribuida. github.com/handoffcl/ai-app-blueprint</div>
+  <div class="ref-item"><strong>Handoff Blueprint</strong> — github.com/handoffcl/handoff-blueprint</div>
+  <div class="ref-item"><strong>Handoff Coder</strong> — github.com/handoffcl/handoff-coder</div>
+  <div class="ref-item"><strong>Handoff</strong> — handoff.cl</div>
+</div>
+
+<div class="paper-footer">
+  <span>Mayo 2026</span>
+  <a href="index.html">← Todas las versiones</a>
+</div>
+
+</body>
+</html>
