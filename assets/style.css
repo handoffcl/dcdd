@@ -50,42 +50,107 @@ body {
 .site-nav a { color: var(--mid); text-decoration: none; }
 .site-nav a:hover { color: var(--black); }
 
-/* ── LANDING ── */
-.landing-title-block {
-  margin-bottom: 56px;
-  padding-bottom: 40px;
-  border-bottom: 1px solid var(--border);
+/* ── LANDING HERO ── */
+.landing-hero {
+  background: var(--accent);
+  margin: 0 -64px;
+  padding: 64px 64px 72px;
+  margin-bottom: 72px;
+  position: relative;
+  overflow: hidden;
 }
 
-.landing-title {
-  font-family: 'Libre Baskerville', serif;
-  font-size: 42pt;
-  font-weight: 700;
-  line-height: 1.08;
-  letter-spacing: -1.5px;
-  color: var(--black);
-  margin-bottom: 14px;
+.landing-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
 }
 
-.landing-english {
-  font-family: 'Inter', sans-serif;
-  font-size: 8.5pt;
-  letter-spacing: 0.14em;
+.landing-hero::after {
+  content: 'DCDD';
+  position: absolute;
+  right: 48px;
+  bottom: -28px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 140pt;
+  font-weight: 500;
+  color: rgba(255,255,255,0.045);
+  line-height: 1;
+  letter-spacing: -4px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.hero-kicker {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8pt;
+  color: rgba(255,255,255,0.42);
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--light);
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 1;
 }
 
+.hero-title-text {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 54pt;
+  font-weight: 700;
+  line-height: 1.07;
+  letter-spacing: -1.5px;
+  color: #ffffff;
+  margin-bottom: 28px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-rule {
+  width: 40px;
+  height: 1px;
+  background: rgba(255,255,255,0.3);
+  margin-bottom: 22px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-tagline {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 12pt;
+  line-height: 1.72;
+  color: rgba(255,255,255,0.66);
+  max-width: 560px;
+  margin-bottom: 0;
+  text-align: left;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── LANDING BODY ── */
 .landing-body {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 1fr 400px;
   gap: 80px;
   margin-bottom: 72px;
 }
 
-.landing-desc {
-  font-size: 11.5pt;
-  line-height: 1.85;
+.landing-excerpt {
+  font-size: 12pt;
+  line-height: 1.75;
   color: var(--mid);
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.landing-excerpt-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 8.5pt;
+  color: var(--light);
+  letter-spacing: 0.05em;
+  margin-bottom: 0;
+  text-align: left;
 }
 
 .versions-label {
@@ -367,7 +432,7 @@ hr {
 
 .ref-section-label {
   font-family: 'Inter', sans-serif;
-  font-size: 8pt;
+  font-size: 9pt;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -382,11 +447,11 @@ hr {
 
 .ref-item {
   font-family: 'Inter', sans-serif;
-  font-size: 9pt;
+  font-size: 11pt;
   color: var(--mid);
-  padding: 8px 0;
+  padding: 10px 0;
   border-bottom: 1px solid #f0f0ec;
-  line-height: 1.6;
+  line-height: 1.65;
 }
 .ref-item strong { color: var(--dark); font-weight: 600; }
 .ref-item a { color: var(--accent); text-decoration: none; }
@@ -394,11 +459,11 @@ hr {
 
 .tool-entry {
   font-family: 'Inter', sans-serif;
-  font-size: 9.5pt;
+  font-size: 11pt;
   color: var(--mid);
-  padding: 8px 0;
+  padding: 10px 0;
   border-bottom: 1px solid var(--border);
-  line-height: 1.6;
+  line-height: 1.65;
 }
 .tool-name { font-weight: 600; color: var(--dark); }
 
@@ -445,8 +510,10 @@ hr {
 /* ── RESPONSIVE ── */
 @media (max-width: 800px) {
   body { padding: 0 24px 60px; }
-  .landing-title { font-size: 26pt; letter-spacing: -0.5px; }
+  .landing-hero { margin: 0 -24px; padding: 48px 24px 56px; }
+  .landing-hero::after { font-size: 80pt; right: 16px; }
+  .hero-title-text { font-size: 32pt; letter-spacing: -0.5px; }
   .landing-body { grid-template-columns: 1fr; gap: 40px; }
-  h1 { font-size: 20pt; }
+  h1 { font-size: 22pt; }
   .version-date { display: none; }
 }
