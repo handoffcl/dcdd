@@ -20,14 +20,14 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { background: #fff; }
+html, body { background-color: #ffffff; }
 
 body {
   font-family: 'Libre Baskerville', Georgia, serif;
   font-size: 10.5pt;
   line-height: 1.8;
   color: var(--dark);
-  background: var(--bg);
+  background-color: #ffffff;
   max-width: var(--page-width);
   margin: 0 auto;
   padding: 0 48px 80px;
