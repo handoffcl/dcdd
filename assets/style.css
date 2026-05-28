@@ -111,21 +111,21 @@ body {
 
 .version-num {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 9pt;
+  font-size: 11pt;
   font-weight: 500;
   color: var(--black);
 }
 
 .version-title {
   font-family: 'Inter', sans-serif;
-  font-size: 9.5pt;
+  font-size: 11pt;
   color: var(--dark);
   line-height: 1.4;
 }
 
 .version-date {
   font-family: 'Inter', sans-serif;
-  font-size: 8pt;
+  font-size: 9pt;
   color: var(--light);
   white-space: nowrap;
 }
@@ -144,8 +144,13 @@ body {
 .status-published { background: var(--green-bg); color: var(--green); }
 .status-wip { background: var(--amber-bg); color: var(--amber); }
 
-.version-row a { text-decoration: none; color: inherit; }
-.version-row a:hover .version-num { text-decoration: underline; }
+a.version-row {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+a.version-row:hover { background: #fafaf8; }
+a.version-row:hover .version-title { text-decoration: underline; }
 
 .landing-footer {
   font-family: 'Inter', sans-serif;
