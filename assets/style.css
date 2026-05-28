@@ -53,9 +53,10 @@ body {
 /* ── LANDING HERO ── */
 .landing-hero {
   background: var(--accent);
-  margin: 0 -64px;
-  padding: 64px 64px 72px;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
   margin-bottom: 72px;
+  padding: 72px calc(50vw - 50% + 64px) 80px;
   position: relative;
   overflow: hidden;
 }
@@ -510,7 +511,7 @@ hr {
 /* ── RESPONSIVE ── */
 @media (max-width: 800px) {
   body { padding: 0 24px 60px; }
-  .landing-hero { margin: 0 -24px; padding: 48px 24px 56px; }
+  .landing-hero { padding-top: 48px; padding-bottom: 56px; }
   .landing-hero::after { font-size: 80pt; right: 16px; }
   .hero-title-text { font-size: 32pt; letter-spacing: -0.5px; }
   .landing-body { grid-template-columns: 1fr; gap: 40px; }
