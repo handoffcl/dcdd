@@ -7,7 +7,7 @@
   --light: #999;
   --border: #e8e8e4;
   --bg: #ffffff;
-  --bg-subtle: #f8f8f6;
+  --bg-subtle: #f5f5f5;
   --bg-code: #f3f3f0;
   --accent: #1e2d3d;
   --green: #2d6a4f;
@@ -20,14 +20,14 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html, body { background-color: #ffffff; }
+html, body { background-color: #ffffff !important; }
 
 body {
   font-family: 'Libre Baskerville', Georgia, serif;
   font-size: 10.5pt;
   line-height: 1.8;
   color: var(--dark);
-  background-color: #ffffff;
+  background-color: #ffffff !important;
   max-width: var(--page-width);
   margin: 0 auto;
   padding: 0 48px 80px;
@@ -91,11 +91,11 @@ body {
 
 .versions-label {
   font-family: 'Inter', sans-serif;
-  font-size: 7.5pt;
+  font-size: 9pt;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--light);
+  color: var(--mid);
   margin-bottom: 16px;
 }
 
